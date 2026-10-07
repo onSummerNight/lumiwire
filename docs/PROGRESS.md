@@ -5,12 +5,13 @@
 - Context agreed and LOCKED 2026-10-07
 - Step 1: skeleton, Typer CLI stubs, JSON spec loader, demo 1987 spec (fields 2,3,4,11,35,39,41,70). 3 tests pass.
 - Decided: JSON spec; masking moved into step 2
+- Step 2a: `decode()` in `src/lumiwire/decode.py` (MTI, primary/secondary bitmap, ASCII/BCD, fixed/llvar/lllvar, `DecodeError`). 8 tests pass.
 
 ## Now
-- Nothing in progress. Next session: `/continue-progress`, then step 2.
+- Nothing in progress.
 
 ## Next
-2. Decode: primary and secondary bitmap, field parsing for ASCII-hex and BCD, default masking of PAN and track data (explicit flag to unmask), synthetic test messages. Test: masked output never contains a full synthetic PAN.
+2b. Masking of PAN and track data (default on, explicit flag to unmask) and CLI `decode` wiring. Test: masked output never contains a full synthetic PAN.
 3. Encode from JSON, with round-trip tests (decode then encode gives the same bytes)
 
 ## Later
