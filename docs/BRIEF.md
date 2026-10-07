@@ -19,3 +19,7 @@
 
 ## Out of scope
 Validate command and broken-message tests (next brief, 4b), any other spec keys.
+
+## Result
+Done. `.venv/bin/pytest -q` -> `24 passed in 0.03s` (22 existing unchanged + 2 new: hex-bitmap round-trip with secondary bitmap, non-hex char DecodeError).
+Nothing for the manager to decide.

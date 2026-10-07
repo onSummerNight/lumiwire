@@ -49,4 +49,6 @@ def encode(message: dict, spec: Spec) -> str:
             body += _digits(value) if f.encoding == "bcd" else value.encode("ascii")
         except UnicodeEncodeError:
             raise EncodeError(f"field {num}: non-ASCII character") from None
+    if spec.bitmap_encoding == "hex":
+        bitmap = bitmap.hex().upper().encode("ascii")
     return (out + bytes(bitmap) + body).hex().upper()

@@ -8,12 +8,13 @@
 - Step 2a: `decode()` in `src/lumiwire/decode.py` (MTI, primary/secondary bitmap, ASCII/BCD, fixed/llvar/lllvar, `DecodeError`). 8 tests pass.
 - Step 2b: `mask.py` (PAN/track masked by default) and CLI `decode` with `--unmask`. 13 tests pass.
 - Step 3: `encode()` in `src/lumiwire/encode.py`, `EncodeError`, CLI `encode`, round-trip tests. 22 tests pass.
+- Step 4a: `bitmap_encoding` honoured in decode/encode (binary, hex); demo spec set to binary. 24 tests pass.
 
 ## Now
 - Nothing in progress.
 
 ## Next
-4. Validate command and broken-message tests (resolve `bitmap_encoding` first)
+4b. Validate command and broken-message tests
 
 ## Later
 - Diff two messages field by field

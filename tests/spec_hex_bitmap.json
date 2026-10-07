@@ -1,7 +1,7 @@
 {
   "name": "iso8583-1987-demo",
   "mti_encoding": "ascii",
-  "bitmap_encoding": "binary",
+  "bitmap_encoding": "hex",
   "fields": {
     "2":  {"name": "Primary account number", "type": "n",   "length": "llvar", "max": 19, "encoding": "ascii", "sensitive": "pan"},
     "3":  {"name": "Processing code",        "type": "n",   "length": "fixed", "max": 6,  "encoding": "ascii"},

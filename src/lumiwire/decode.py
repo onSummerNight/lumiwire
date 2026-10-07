@@ -37,10 +37,20 @@ def _read_len(r: _Reader, width: int, encoding: str, what: str) -> int:
     return int(text)
 
 
-def _read_bitmap(r: _Reader) -> list[int]:
-    bits = r.take(8, "primary bitmap")
+def _take_bitmap(r: _Reader, encoding: str, what: str) -> bytes:
+    if encoding == "binary":
+        return r.take(8, what)
+    start = r.pos
+    text = r.take(16, what).decode("ascii", errors="replace")
+    if not all(c in "0123456789abcdefABCDEF" for c in text):
+        raise DecodeError(f"{what}: non-hex character in {text!r} at offset {start}")
+    return bytes.fromhex(text)
+
+
+def _read_bitmap(r: _Reader, encoding: str) -> list[int]:
+    bits = _take_bitmap(r, encoding, "primary bitmap")
     if bits[0] & 0x80:
-        bits += r.take(8, "secondary bitmap")
+        bits += _take_bitmap(r, encoding, "secondary bitmap")
     return [i + 1 for i in range(len(bits) * 8)
             if bits[i // 8] & (0x80 >> i % 8) and i != 0]
 
@@ -54,7 +64,7 @@ def decode(hex_message: str, spec: Spec) -> dict:
         mti = _read_digits(r, 4, "MTI")
     else:
         mti = r.take(4, "MTI").decode("ascii", errors="replace")
-    present = _read_bitmap(r)
+    present = _read_bitmap(r, spec.bitmap_encoding)
     fields = {}
     for num in present:
         f = spec.fields.get(num)

@@ -11,3 +11,4 @@ Append-only. `YYYY-MM-DD HH:MM | who | what | result` (local time).
 2026-10-07 23:20 | manager | Review brief 2b (masking + CLI decode) | done, 13 passed (re-run); track masks separator and discretionary data; step 2 complete
 2026-10-07 23:59 | claude | Step 3: encode.py, CLI encode, test_encode.py; stub test now uses validate | 22 passed
 2026-10-07 23:50 | manager | Review brief 3 (encode from JSON + round-trip) | done, 22 passed (re-run); step 3 complete
+2026-10-07 | claude | Step 4a: honour bitmap_encoding (decode/encode), tests/spec_hex_bitmap.json, test_bitmap_encoding.py | 24 passed
