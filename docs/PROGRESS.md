@@ -17,7 +17,7 @@ Updated 2026-10-07 21:38
 - Nothing in progress. v1 complete.
 
 ## Next
-- v2 (ISO 8583:2003 alongside 1987, decided 2026-10-07): 7a spec edition + MTI version check + 2003 gap list (briefed)
+- v2 (ISO 8583:2003 alongside 1987, decided 2026-10-07): next step sized from docs/ISO2003-GAPS.md (7a done)
 
 ## Later
 - Diff two messages field by field
