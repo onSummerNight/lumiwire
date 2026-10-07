@@ -38,3 +38,10 @@ def test_pan_error_does_not_quote_value():
 def test_collects_all_errors():
     msg = BROKEN["bad_mti_version"][0].replace("31313131303030303030303030", "31313131303041303030303030", 1)
     assert len(validate(msg, SPEC)) == 2
+
+
+def test_mti_2100_rejected_by_1987_spec():
+    from messages import MSG_0200
+    msg = MSG_0200.replace("30323030", "32313030", 1)  # MTI "0200" -> "2100"
+    errors = validate(msg, SPEC)
+    assert any("version digit must be 0 for ISO 8583:1987" in e for e in errors)

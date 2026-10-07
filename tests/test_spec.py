@@ -35,3 +35,15 @@ def test_cli_validate_ok():
     r = CliRunner().invoke(app, ["validate", MSG_0200])
     assert r.exit_code == 0
     assert r.output.strip() == "OK"
+
+
+@pytest.mark.parametrize("edition", [None, "1993"])
+def test_edition_required_and_known(tmp_path, edition):
+    raw = json.loads(DEMO.read_text())
+    raw.pop("edition")
+    if edition:
+        raw["edition"] = edition
+    p = tmp_path / "e.json"
+    p.write_text(json.dumps(raw))
+    with pytest.raises(SpecError, match="edition"):
+        load_spec(p)

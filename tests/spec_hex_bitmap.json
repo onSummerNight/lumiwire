@@ -1,5 +1,6 @@
 {
   "name": "iso8583-1987-demo",
+  "edition": "1987",
   "mti_encoding": "ascii",
   "bitmap_encoding": "hex",
   "fields": {

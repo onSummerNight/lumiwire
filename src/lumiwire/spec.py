@@ -7,6 +7,7 @@ TYPES = {"n", "an", "ans", "z"}
 LENGTHS = {"fixed", "llvar", "lllvar"}
 ENCODINGS = {"ascii", "bcd"}
 SENSITIVE = {"pan", "track"}
+EDITIONS = {"1987": "0", "2003": "2"}  # edition -> MTI version digit
 
 
 class SpecError(ValueError):
@@ -27,6 +28,7 @@ class Field:
 @dataclass(frozen=True)
 class Spec:
     name: str
+    edition: str
     mti_encoding: str
     bitmap_encoding: str
     fields: dict[int, Field]
@@ -66,6 +68,7 @@ def load_spec(path: str | Path) -> Spec:
         raise SpecError("spec has no fields")
     return Spec(
         name=raw["name"],
+        edition=_check(raw.get("edition"), EDITIONS, "edition"),
         mti_encoding=_check(raw.get("mti_encoding"), ENCODINGS, "mti_encoding"),
         bitmap_encoding=_check(raw.get("bitmap_encoding"), {"hex", "binary"}, "bitmap_encoding"),
         fields=fields,
