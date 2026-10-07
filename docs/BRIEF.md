@@ -1,28 +1,21 @@
-# Brief: Step 5 — v1 wrap-up
+# Brief: Step 6 — publish v1.0
 
-**Goal:** a stranger can install LumiWire from a clean checkout and run `decode`, `encode` and `validate` by following `README.md`; v1.0 tagged locally.
+**Goal:** `main` (at or after b003cf1) and tag `v1.0` are on `origin` (github.com/onSummerNight/lumiwire).
 
-**Why now:** All v1 scope is built and every success check passes (43 tests); the repo has no README. User chose wrap-up.
+**Why now:** v1 is complete and verified (43 tests, README checked in a fresh venv). User approved the push on 2026-10-08.
 
 ## Steps
-1. `README.md` (short): what it is (from CONTEXT Problem), install (`pip install -e .`), one example each for decode (masked output), `--unmask`, encode from a JSON file, validate (OK and one error), spec file format (keys and allowed values from `spec.py`), clean-room note and "synthetic data only".
-2. Add `examples/0200.json` (synthetic, test PAN) used by the README encode example.
-3. Fresh venv in the scratchpad: `pip install -e .`, then run every README command verbatim; outputs must match what the README shows. Fix the README, not the code, unless a command is broken.
-4. Check `pyproject.toml` has version `1.0.0` and the `lumiwire` entry point; `.venv/bin/pytest -q` still green.
-5. Commit `docs: README and example for v1`, then `git tag v1.0` locally. Do NOT push; report so the user can approve.
+1. `git status`: the only expected change is `.claude/commands/brief.md` plus docs. Commit docs if needed (`docs: v1 review and push brief`); leave `.claude/commands/brief.md` alone unless the user says otherwise.
+2. Clean-room check before pushing: `git grep -nE '[0-9]{13,19}'` shows only hex runs and the test PAN 4111111111111111; no `.env`, keys or real hostnames tracked.
+3. `git push origin main` then `git push origin v1.0`.
+4. Verify: `git ls-remote --tags origin v1.0` and `git ls-remote origin main` match the local hashes.
 
 ## Acceptance check
-Every README command run in a fresh venv gives the output shown; `.venv/bin/pytest -q` → 43 passed; `git tag` lists `v1.0`.
+`git ls-remote origin main refs/tags/v1.0` matches `git rev-parse main v1.0`.
 
 ## Constraints
-- No code changes unless a README command fails (then the smallest fix, with a test). Synthetic data only; no real card numbers or hostnames.
-- Ask before pushing the commit or tag.
+- Push approval covers only `main` and `v1.0`. No force-push, no other branches or tags, no GitHub release or PyPI.
+- If the push is rejected (remote ahead), stop and report; do not rebase or force.
 
 ## Out of scope
-Later items (diff, test vectors, explain mode, 1993/2003), PyPI publishing, CI setup.
-
-## Result
-Done. Fresh venv `pip install -e .`; all 5 README commands (encode, decode, decode --unmask, validate OK, validate error) output matched the README exactly.
-`.venv/bin/pytest -q` -> `43 passed in 0.03s`. `git tag` lists `v1.0`.
-- pyproject version was `0.1.0`; bumped to `1.0.0` (brief step 4). No code changes.
-- Not pushed. Manager/user must approve pushing the commit and tag.
+Later items (diff, test vectors, explain mode, 1993/2003): they need `/decide` first.
