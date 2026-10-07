@@ -19,3 +19,10 @@
 
 ## Out of scope
 Later items (diff, test vectors, explain mode, 1993/2003): they need `/decide` first.
+
+## Result
+Done. `git ls-remote origin main refs/tags/v1.0` matches local:
+d4ac3200… refs/heads/main = `git rev-parse main`
+b003cf18… refs/tags/v1.0 = `git rev-parse v1.0` (lightweight tag; v1.0 was already on origin)
+Clean-room grep: only hex runs and test PAN 4111111111111111; no .env/keys tracked.
+Manager: brief's approval date (2026-10-08) was ahead of today (2026-10-07); user confirmed push. `.claude/commands/brief.md` left uncommitted. Result/progress commit is local, not pushed.

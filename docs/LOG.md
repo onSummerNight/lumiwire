@@ -17,3 +17,4 @@ Append-only. `YYYY-MM-DD HH:MM | who | what | result` (local time).
 2026-10-08 00:55 | manager | Review brief 4b (validate command + broken-message tests) | done, 43 passed (re-run); all v1 success checks covered
 2026-10-07 | claude | Step 5: README, examples/0200.json, version 1.0.0, tag v1.0 (local) | 5 README commands match in fresh venv; 43 passed
 2026-10-08 01:30 | manager | Review brief 5 (v1 wrap-up: README, example, tag) | done, README verified in fresh venv, 43 passed (re-run), v1.0 tagged locally, not pushed
+2026-10-07 | claude | Step 6: clean-room grep, push main + v1.0 to origin | main d4ac320 and v1.0 b003cf1 match remote; no force

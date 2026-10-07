@@ -10,13 +10,14 @@
 - Step 3: `encode()` in `src/lumiwire/encode.py`, `EncodeError`, CLI `encode`, round-trip tests. 22 tests pass.
 - Step 4a: `bitmap_encoding` honoured in decode/encode (binary, hex); demo spec set to binary. 24 tests pass.
 - Step 4b: `validate()` in `src/lumiwire/validate.py`, CLI `validate`, 7 broken synthetic messages. 43 tests pass.
-- Step 5: README.md, examples/0200.json, version 1.0.0; README commands verified in a fresh venv; tagged v1.0 locally (not pushed).
+- Step 5: README.md, examples/0200.json, version 1.0.0; README commands verified in a fresh venv; tagged v1.0.
+- Step 6: main and tag v1.0 pushed to origin (tag v1.0 at b003cf1, main at d4ac320).
 
 ## Now
 - Nothing in progress.
 
 ## Next
-- User approval to push the v1.0 commit and tag
+- Pick from Later via `/decide`; push of the docs commit made after d4ac320 needs approval
 
 ## Later
 - Diff two messages field by field
