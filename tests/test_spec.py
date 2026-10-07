@@ -25,6 +25,13 @@ def test_bad_spec_rejected(tmp_path):
         load_spec(p)
 
 
-def test_cli_stub_runs():
+def test_cli_validate_reports_errors():
     r = CliRunner().invoke(app, ["validate", "00"])
-    assert r.exit_code == 2
+    assert r.exit_code == 1
+
+
+def test_cli_validate_ok():
+    from messages import MSG_0200
+    r = CliRunner().invoke(app, ["validate", MSG_0200])
+    assert r.exit_code == 0
+    assert r.output.strip() == "OK"

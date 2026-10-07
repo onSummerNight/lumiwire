@@ -7,15 +7,11 @@ from .decode import DecodeError, decode as decode_message
 from .encode import EncodeError, encode as encode_message
 from .mask import mask
 from .spec import SpecError, load_spec
+from .validate import validate as validate_message
 
 DEFAULT_SPEC = resources.files("lumiwire") / "specs" / "iso8583_1987.json"
 
 app = typer.Typer(help="ISO 8583 message toolkit.", no_args_is_help=True)
-
-
-def _todo(name: str):
-    typer.echo(f"{name}: not implemented yet", err=True)
-    raise typer.Exit(2)
 
 
 @app.command()
@@ -55,4 +51,13 @@ def encode(json_file: str, spec: str = typer.Option(None, help="Spec JSON file")
 @app.command()
 def validate(hex_message: str, spec: str = typer.Option(None, help="Spec JSON file")):
     """Validate a hex message against the spec."""
-    _todo("validate")
+    try:
+        errors = validate_message(hex_message, load_spec(spec or DEFAULT_SPEC))
+    except SpecError as e:
+        typer.echo(f"error: {e}", err=True)
+        raise typer.Exit(1)
+    if errors:
+        for e in errors:
+            typer.echo(e, err=True)
+        raise typer.Exit(1)
+    typer.echo("OK")

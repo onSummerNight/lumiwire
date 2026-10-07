@@ -26,3 +26,28 @@ MSG_0800 = "".join([
     "0001",                              # F70 BCD "001", left-padded to 2 bytes
 ])
 DECODED_0800 = {"mti": "0800", "fields": {11: "000001", 70: "001"}}
+
+
+def _swap(msg: str, old: str, new: str) -> str:
+    assert msg.count(old) == 1, old
+    return msg.replace(old, new)
+
+
+# 0200 with field 39 added (bitmap bit 39, "00")
+MSG_0200_F39 = _swap(_swap(MSG_0200, "7020000020800000", "7020000022800000"),
+                     "5445524d30303031", "3030" + "5445524d30303031")
+
+# Deliberately broken variants: (message, expected error substring)
+BROKEN = {
+    "truncated": (MSG_0200[:-4], "field 41"),
+    "unknown_field_bit": (_swap(MSG_0200, "7020000020800000", "7820000020800000"),
+                          "field 5: no entry in spec"),
+    "bad_mti_version": (_swap(MSG_0200, "30323030", "39323030"), "version digit"),
+    "bad_mti_nondigit": (_swap(MSG_0200, "30323030", "41323030"), "must be 4 digits"),
+    "non_digit_in_n": (_swap(MSG_0200, "31313131" "303030303030" "303030", "31313131" "303041303030" "303030"),
+                       "field 3 (Processing code): non-digit character 'A' in n field"),
+    "bad_an_char": (_swap(MSG_0200_F39, "3030" "5445524d", "3021" "5445524d"),
+                    "field 39 (Response code): non-alphanumeric character '!' in an field"),
+    "bad_track_separator": (_swap(MSG_0200, "313d3235", "31583235"),
+                            "field 35 (Track 2 data): invalid character in z field"),
+}
