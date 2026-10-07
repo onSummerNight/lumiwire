@@ -1,0 +1,15 @@
+{
+  "name": "iso8583-1987-demo",
+  "mti_encoding": "ascii",
+  "bitmap_encoding": "hex",
+  "fields": {
+    "2":  {"name": "Primary account number", "type": "n",   "length": "llvar", "max": 19, "encoding": "ascii", "sensitive": "pan"},
+    "3":  {"name": "Processing code",        "type": "n",   "length": "fixed", "max": 6,  "encoding": "ascii"},
+    "4":  {"name": "Amount, transaction",    "type": "n",   "length": "fixed", "max": 12, "encoding": "ascii"},
+    "11": {"name": "STAN",                   "type": "n",   "length": "fixed", "max": 6,  "encoding": "bcd"},
+    "35": {"name": "Track 2 data",           "type": "z",   "length": "llvar", "max": 37, "encoding": "ascii", "sensitive": "track"},
+    "39": {"name": "Response code",          "type": "an",  "length": "fixed", "max": 2,  "encoding": "ascii"},
+    "41": {"name": "Terminal ID",            "type": "ans", "length": "fixed", "max": 8,  "encoding": "ascii"},
+    "70": {"name": "Network management code","type": "n",   "length": "fixed", "max": 3,  "encoding": "bcd"}
+  }
+}

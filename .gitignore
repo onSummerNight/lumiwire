@@ -1,7 +1,5 @@
-CLAUDE.local.md
-.env
-.DS_Store
 __pycache__/
 *.egg-info/
-.pytest_cache/
 .venv/
+.pytest_cache/
+.env

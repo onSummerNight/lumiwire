@@ -44,4 +44,4 @@ Python 3.10+, standard library plus Typer, pytest. Same layout as LumiLog.
 
 ## Open questions
 
-- Exact spec file format (JSON or TOML): decide at step 1
+- None (spec format decided: JSON)
