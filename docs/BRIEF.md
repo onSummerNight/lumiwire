@@ -1,27 +1,25 @@
-# Brief: Step 2b — masking + CLI `decode`
+# Brief: Step 3 — encode from JSON + round-trip
 
-**Goal:** `lumiwire decode HEX` prints decoded fields with PAN and track data masked by default; `--unmask` shows them in full.
+**Goal:** `encode(message, spec) -> str` in `src/lumiwire/encode.py` builds the hex message from `{"mti": "0200", "fields": {"2": "...", ...}}`, and `lumiwire encode FILE.json` prints it.
 
-**Why now:** Top of Next. Completes step 2 and the success check "masked output never contains a full synthetic PAN".
+**Why now:** Top of Next. Round-trip is a v1 success check, and validate (Later) depends on both directions.
 
 ## Steps
-1. `src/lumiwire/mask.py`: `mask(result, spec) -> dict` returns a copy; fields with `sensitive == "pan"` keep first 6 and last 4 digits, the middle becomes `*`; `"track"` keeps first 6 and last 4 digits of the PAN part only, everything else becomes `*`. Values too short to mask safely are fully starred.
-2. CLI `decode`: `--spec` defaults to the bundled `specs/iso8583_1987.json`; decode, mask unless `--unmask`, print one line per field (`MTI 0200`, then `002 Primary account number: 411111******1111`). `DecodeError`/`SpecError` → message on stderr, exit 1.
-3. `tests/test_mask.py`: masked output for both synthetic messages contains no full PAN anywhere (check the digits run, not just the field); track data likewise; `--unmask` shows them in full.
-4. CLI test with Typer's `CliRunner`: default output masked, exit 0; truncated message → exit 1 with an error.
+1. `encode()`: MTI, bitmap(s) and fields, mirroring `decode()` exactly: raw-byte bitmaps, set bit 1 and add the secondary bitmap only when a field > 64 is present; llvar/lllvar prefixes count digits/chars; BCD left-padded to a whole byte. Accept field keys as int or str.
+2. Raise `EncodeError` (field number + reason) for: field not in spec, value longer than `max`, fixed field with the wrong length, non-digit in an `n` field.
+3. `tests/test_encode.py`: for every synthetic message in `tests/messages.py`, `encode(decode(hex)) == hex` (case-insensitive) and `decode(encode(obj)) == obj`; one test per `EncodeError` case.
+4. CLI `encode`: read the JSON file, `--spec` defaults to the bundled spec like `decode`, print uppercase hex; `EncodeError`/`SpecError`/bad JSON → stderr, exit 1. Update the CLI stub test (no stub left except `validate`).
 
 ## Acceptance check
-`.venv/bin/pytest -q` — all pass (8 existing + new mask/CLI tests); `lumiwire decode <0200 hex>` shows `411111******1111`.
+`.venv/bin/pytest -q` — all pass (13 existing + new encode tests), including round-trip on both synthetic messages.
 
 ## Constraints
-- Don't change `decode()` or its bitmap handling (see DECISIONS 2026-10-07).
-- Masking happens before any output; no code path prints unmasked unless `--unmask`.
-- Synthetic data only. Small commit: `feat: mask sensitive fields and wire decode CLI`.
+- Don't change `decode()`, `mask()` or bitmap handling (DECISIONS 2026-10-07). Encode never masks; it takes real (synthetic) values.
+- Standard library only. Synthetic data only. Small commit: `feat: encode from JSON with round-trip tests`.
 
 ## Out of scope
-Encode, validate, JSON output format, `bitmap_encoding` handling.
+Validate command, `bitmap_encoding` handling, JSON output from `decode`, type checks for an/ans/z beyond length.
 
 ## Result
-Done. `.venv/bin/pytest -q` → `13 passed in 0.02s` (8 existing + 5 new).
-`lumiwire decode <0200 hex>` prints `002 Primary account number: 411111******1111`; track 2 prints `411111******1111************`.
-For manager: (1) track masking stars the separator and everything after the PAN. (2) Existing `test_cli_stub_runs` used `decode` as the not-implemented stub; it now uses `encode`. (3) PANs under 13 digits are fully starred.
+Done. `.venv/bin/pytest -q` -> `22 passed in 0.03s` (13 existing + 9 new: round-trip x2, string keys, 4 EncodeError cases, 2 CLI).
+Manager to decide: a `bcd` field with non-`n` type still rejects non-digits (needed to pack BCD); empty value in an `n` field is rejected as non-digit.

@@ -1,8 +1,10 @@
+import json
 from importlib import resources
 
 import typer
 
 from .decode import DecodeError, decode as decode_message
+from .encode import EncodeError, encode as encode_message
 from .mask import mask
 from .spec import SpecError, load_spec
 
@@ -39,7 +41,15 @@ def decode(
 @app.command()
 def encode(json_file: str, spec: str = typer.Option(None, help="Spec JSON file")):
     """Encode JSON fields into a hex message."""
-    _todo("encode")
+    try:
+        with open(json_file) as fh:
+            message = json.load(fh)
+        loaded = load_spec(spec or DEFAULT_SPEC)
+        result = encode_message(message, loaded)
+    except (EncodeError, SpecError, json.JSONDecodeError, OSError) as e:
+        typer.echo(f"error: {e}", err=True)
+        raise typer.Exit(1)
+    typer.echo(result)
 
 
 @app.command()

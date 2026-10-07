@@ -7,15 +7,15 @@
 - Decided: JSON spec; masking moved into step 2
 - Step 2a: `decode()` in `src/lumiwire/decode.py` (MTI, primary/secondary bitmap, ASCII/BCD, fixed/llvar/lllvar, `DecodeError`). 8 tests pass.
 - Step 2b: `mask.py` (PAN/track masked by default) and CLI `decode` with `--unmask`. 13 tests pass.
+- Step 3: `encode()` in `src/lumiwire/encode.py`, `EncodeError`, CLI `encode`, round-trip tests. 22 tests pass.
 
 ## Now
 - Nothing in progress.
 
 ## Next
-3. Encode from JSON, with round-trip tests (decode then encode gives the same bytes)
+4. Validate command and broken-message tests (resolve `bitmap_encoding` first)
 
 ## Later
-- Validate command and broken-message tests (in v1 scope, after step 3)
 - Diff two messages field by field
 - Test-vector generation (valid and broken)
 - Optional Claude explain mode
