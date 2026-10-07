@@ -18,3 +18,6 @@ Append-only. `YYYY-MM-DD HH:MM | who | what | result` (local time).
 2026-10-07 | claude | Step 5: README, examples/0200.json, version 1.0.0, tag v1.0 (local) | 5 README commands match in fresh venv; 43 passed
 2026-10-08 01:30 | manager | Review brief 5 (v1 wrap-up: README, example, tag) | done, README verified in fresh venv, 43 passed (re-run), v1.0 tagged locally, not pushed
 2026-10-07 | claude | Step 6: clean-room grep, push main + v1.0 to origin | main d4ac320 and v1.0 b003cf1 match remote; no force
+2026-10-07 21:37 | manager | Correction: manager review lines timed 22:45 to 01:30 (incl. "2026-10-08") had guessed timestamps; all happened on 2026-10-07 before 21:37. The push brief's "2026-10-08" approval date is the same error | dates fixed from here on
+2026-10-07 21:37 | manager | Review brief 6 (push main + v1.0) | done, ls-remote matches (main d4ac320, v1.0 b003cf1); docs commit 0441c75 local only; v1 scope complete
+2026-10-07 21:38 | manager | /save-progress: PROGRESS rewritten for v1 complete; docs committed and pushed | next session: /decide a Later item
