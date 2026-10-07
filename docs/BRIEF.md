@@ -1,25 +1,21 @@
-# Brief: Step 3 — encode from JSON + round-trip
+# Brief: Step 4a — honour `bitmap_encoding`
 
-**Goal:** `encode(message, spec) -> str` in `src/lumiwire/encode.py` builds the hex message from `{"mti": "0200", "fields": {"2": "...", ...}}`, and `lumiwire encode FILE.json` prints it.
+**Goal:** decode and encode read/write bitmaps per spec: `"binary"` = 8 raw bytes per bitmap, `"hex"` = 16 ASCII hex chars per bitmap.
 
-**Why now:** Top of Next. Round-trip is a v1 success check, and validate (Later) depends on both directions.
+**Why now:** Next says resolve `bitmap_encoding` before validate; user chose "honour both" (DECISIONS 2026-10-07).
 
 ## Steps
-1. `encode()`: MTI, bitmap(s) and fields, mirroring `decode()` exactly: raw-byte bitmaps, set bit 1 and add the secondary bitmap only when a field > 64 is present; llvar/lllvar prefixes count digits/chars; BCD left-padded to a whole byte. Accept field keys as int or str.
-2. Raise `EncodeError` (field number + reason) for: field not in spec, value longer than `max`, fixed field with the wrong length, non-digit in an `n` field.
-3. `tests/test_encode.py`: for every synthetic message in `tests/messages.py`, `encode(decode(hex)) == hex` (case-insensitive) and `decode(encode(obj)) == obj`; one test per `EncodeError` case.
-4. CLI `encode`: read the JSON file, `--spec` defaults to the bundled spec like `decode`, print uppercase hex; `EncodeError`/`SpecError`/bad JSON → stderr, exit 1. Update the CLI stub test (no stub left except `validate`).
+1. Demo spec `iso8583_1987.json`: set `"bitmap_encoding": "binary"` (current behaviour, so existing messages stay valid).
+2. `decode.py`: bitmap reader takes the spec's encoding; for `"hex"` read 16 ASCII chars, check they are hex digits (else `DecodeError` with offset), convert to bits. Secondary bitmap the same way.
+3. `encode.py`: mirror it; for `"hex"` emit the bitmap as uppercase ASCII hex chars.
+4. Tests: a second spec fixture `tests/spec_hex_bitmap.json` (copy of demo, `"hex"`), one synthetic message using it with a secondary bitmap; round-trip both ways; non-hex char in an ASCII bitmap raises `DecodeError`.
 
 ## Acceptance check
-`.venv/bin/pytest -q` — all pass (13 existing + new encode tests), including round-trip on both synthetic messages.
+`.venv/bin/pytest -q` — all pass (22 existing + new bitmap tests).
 
 ## Constraints
-- Don't change `decode()`, `mask()` or bitmap handling (DECISIONS 2026-10-07). Encode never masks; it takes real (synthetic) values.
-- Standard library only. Synthetic data only. Small commit: `feat: encode from JSON with round-trip tests`.
+- Don't change field parsing, masking or CLI behaviour. Existing tests must pass unchanged.
+- Synthetic data only. Small commit: `feat: honour spec bitmap_encoding`.
 
 ## Out of scope
-Validate command, `bitmap_encoding` handling, JSON output from `decode`, type checks for an/ans/z beyond length.
-
-## Result
-Done. `.venv/bin/pytest -q` -> `22 passed in 0.03s` (13 existing + 9 new: round-trip x2, string keys, 4 EncodeError cases, 2 CLI).
-Manager to decide: a `bcd` field with non-`n` type still rejects non-digits (needed to pack BCD); empty value in an `n` field is rejected as non-digit.
+Validate command and broken-message tests (next brief, 4b), any other spec keys.
