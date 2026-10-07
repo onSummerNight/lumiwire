@@ -26,5 +26,5 @@ def test_bad_spec_rejected(tmp_path):
 
 
 def test_cli_stub_runs():
-    r = CliRunner().invoke(app, ["decode", "00"])
+    r = CliRunner().invoke(app, ["encode", "x.json"])
     assert r.exit_code == 2

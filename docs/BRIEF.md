@@ -1,27 +1,27 @@
-# Brief: Step 2a — decode core (library only)
+# Brief: Step 2b — masking + CLI `decode`
 
-**Goal:** `decode(hex_message, spec) -> dict` in `src/lumiwire/decode.py` that parses MTI, primary and secondary bitmap, and every field in the demo spec (ASCII and BCD, fixed/llvar/lllvar).
+**Goal:** `lumiwire decode HEX` prints decoded fields with PAN and track data masked by default; `--unmask` shows them in full.
 
-**Why now:** Top of Next. Step 2 is too large for one brief, so it is split: 2a decode core, 2b masking + CLI `decode` wiring.
+**Why now:** Top of Next. Completes step 2 and the success check "masked output never contains a full synthetic PAN".
 
 ## Steps
-1. Bitmap: read primary (16 hex chars); if bit 1 set, read secondary. Return the sorted list of present field numbers. Error on a field with no spec entry.
-2. Field parser: fixed/llvar/lllvar lengths; ASCII = 2 hex chars per char; BCD = 2 digits per byte, left-padded to even length (prefix in the same encoding as the field). Raise a clear `DecodeError` with field number and offset on short or trailing data.
-3. Result shape: `{"mti": "0200", "fields": {2: "...", 3: "...", ...}}`. No masking yet.
-4. Build synthetic test messages in `tests/messages.py` by hand (hex strings with a comment per part): one 0200 with fields 2,3,4,11,35,41; one 0800 with a secondary bitmap and field 70. Use test PANs only (e.g. 4111111111111111).
-5. `tests/test_decode.py`: decode both messages to the expected dicts; truncated message and unknown field each raise `DecodeError`.
+1. `src/lumiwire/mask.py`: `mask(result, spec) -> dict` returns a copy; fields with `sensitive == "pan"` keep first 6 and last 4 digits, the middle becomes `*`; `"track"` keeps first 6 and last 4 digits of the PAN part only, everything else becomes `*`. Values too short to mask safely are fully starred.
+2. CLI `decode`: `--spec` defaults to the bundled `specs/iso8583_1987.json`; decode, mask unless `--unmask`, print one line per field (`MTI 0200`, then `002 Primary account number: 411111******1111`). `DecodeError`/`SpecError` → message on stderr, exit 1.
+3. `tests/test_mask.py`: masked output for both synthetic messages contains no full PAN anywhere (check the digits run, not just the field); track data likewise; `--unmask` shows them in full.
+4. CLI test with Typer's `CliRunner`: default output masked, exit 0; truncated message → exit 1 with an error.
 
 ## Acceptance check
-`pytest -q` — all tests pass (3 existing + new decode tests).
+`.venv/bin/pytest -q` — all pass (8 existing + new mask/CLI tests); `lumiwire decode <0200 hex>` shows `411111******1111`.
 
 ## Constraints
-- Standard library only; reuse `Spec`/`Field` from `spec.py`, don't change its API.
-- Synthetic data only. Clean room.
-- Small commit: `feat: decode MTI, bitmaps and fields`.
+- Don't change `decode()` or its bitmap handling (see DECISIONS 2026-10-07).
+- Masking happens before any output; no code path prints unmasked unless `--unmask`.
+- Synthetic data only. Small commit: `feat: mask sensitive fields and wire decode CLI`.
 
 ## Out of scope
-Masking, CLI wiring, encode, validate, type checking of field contents (n/an/ans) beyond what parsing needs.
+Encode, validate, JSON output format, `bitmap_encoding` handling.
 
 ## Result
-Done. `.venv/bin/pytest -q` → `8 passed in 0.02s` (3 existing + 5 decode tests).
-Decisions for manager: (1) bitmap is read as 8 raw bytes = 16 hex chars of input, per the brief, regardless of spec `bitmap_encoding` ("hex"/"binary" not distinguished yet). (2) llvar/lllvar length counts digits/chars, not bytes; BCD values are left-padded to a whole byte and the pad is stripped on decode (field 70 → "001").
+Done. `.venv/bin/pytest -q` → `13 passed in 0.02s` (8 existing + 5 new).
+`lumiwire decode <0200 hex>` prints `002 Primary account number: 411111******1111`; track 2 prints `411111******1111************`.
+For manager: (1) track masking stars the separator and everything after the PAN. (2) Existing `test_cli_stub_runs` used `decode` as the not-implemented stub; it now uses `encode`. (3) PANs under 13 digits are fully starred.
