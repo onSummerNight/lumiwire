@@ -14,3 +14,5 @@ Append-only. `YYYY-MM-DD HH:MM | who | what | result` (local time).
 2026-10-07 | claude | Step 4a: honour bitmap_encoding (decode/encode), tests/spec_hex_bitmap.json, test_bitmap_encoding.py | 24 passed
 2026-10-08 00:20 | manager | Review brief 4a (honour bitmap_encoding binary/hex) | done, 24 passed (re-run), existing tests unchanged
 2026-10-07 | claude | Step 4b: validate.py, CLI validate, test_validate.py, BROKEN messages | 43 passed
+2026-10-08 00:55 | manager | Review brief 4b (validate command + broken-message tests) | done, 43 passed (re-run); all v1 success checks covered
+2026-10-07 | claude | Step 5: README, examples/0200.json, version 1.0.0, tag v1.0 (local) | 5 README commands match in fresh venv; 43 passed

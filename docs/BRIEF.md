@@ -1,29 +1,28 @@
-# Brief: Step 4b — validate command
+# Brief: Step 5 — v1 wrap-up
 
-**Goal:** `validate(hex_message, spec) -> list[str]` in `src/lumiwire/validate.py` returns every problem found (empty list = valid), and `lumiwire validate HEX` reports them.
+**Goal:** a stranger can install LumiWire from a clean checkout and run `decode`, `encode` and `validate` by following `README.md`; v1.0 tagged locally.
 
-**Why now:** Top of Next and the last v1 success check: "validate rejects deliberately broken synthetic messages with a clear error".
+**Why now:** All v1 scope is built and every success check passes (43 tests); the repo has no README. User chose wrap-up.
 
 ## Steps
-1. Structure: run `decode()`; a `DecodeError` becomes the single error (structure broken, nothing further to check). MTI must be 4 digits with a valid 1987 version digit `0`.
-2. Content, per field: `n` digits only; `an` letters/digits; `ans` printable ASCII; `z` digits plus `=` or `D` separator; length within `max`. Each error names field number and spec name, e.g. `field 3 (Processing code): non-digit 'A'`. Collect all, don't stop at the first.
-3. Error text must never contain an unmasked PAN or track value (mask before quoting a value, or don't quote it for sensitive fields).
-4. `tests/test_validate.py`: both good synthetic messages → `[]`; a set of at least 6 broken messages built in `tests/messages.py` (truncated, unknown field bit, bad MTI, non-digit in `n`, bad char in `an`, bad track separator) → one expected error each; no error string contains the full test PAN.
-5. CLI `validate`: `--spec` defaults to the bundled spec; prints `OK` and exits 0, or one error per line on stderr and exits 1. Replace the remaining stub test.
+1. `README.md` (short): what it is (from CONTEXT Problem), install (`pip install -e .`), one example each for decode (masked output), `--unmask`, encode from a JSON file, validate (OK and one error), spec file format (keys and allowed values from `spec.py`), clean-room note and "synthetic data only".
+2. Add `examples/0200.json` (synthetic, test PAN) used by the README encode example.
+3. Fresh venv in the scratchpad: `pip install -e .`, then run every README command verbatim; outputs must match what the README shows. Fix the README, not the code, unless a command is broken.
+4. Check `pyproject.toml` has version `1.0.0` and the `lumiwire` entry point; `.venv/bin/pytest -q` still green.
+5. Commit `docs: README and example for v1`, then `git tag v1.0` locally. Do NOT push; report so the user can approve.
 
 ## Acceptance check
-`.venv/bin/pytest -q` — all pass (24 existing + new validate tests).
+Every README command run in a fresh venv gives the output shown; `.venv/bin/pytest -q` → 43 passed; `git tag` lists `v1.0`.
 
 ## Constraints
-- Don't change `decode()`, `encode()` or `mask()` behaviour; reuse them. Standard library only, synthetic data only.
-- Small commit: `feat: validate command with broken-message tests`.
+- No code changes unless a README command fails (then the smallest fix, with a test). Synthetic data only; no real card numbers or hostnames.
+- Ask before pushing the commit or tag.
 
 ## Out of scope
-Field-level semantics (dates, amounts, processing-code tables), MAC/PIN checks, JSON output.
+Later items (diff, test vectors, explain mode, 1993/2003), PyPI publishing, CI setup.
 
 ## Result
-Done. `.venv/bin/pytest -q` -> `43 passed in 0.04s` (24 existing + 19 new/changed).
-- validate() reuses decode(); structure error is the single result, else MTI + per-field content errors, all collected.
-- PAN/track errors never quote the value; tested.
-- Removed the now-unused `_todo` helper in cli.py.
-- Decision for manager: `max` length check is mostly redundant (decode already enforces it); kept as a cheap guard.
+Done. Fresh venv `pip install -e .`; all 5 README commands (encode, decode, decode --unmask, validate OK, validate error) output matched the README exactly.
+`.venv/bin/pytest -q` -> `43 passed in 0.03s`. `git tag` lists `v1.0`.
+- pyproject version was `0.1.0`; bumped to `1.0.0` (brief step 4). No code changes.
+- Not pushed. Manager/user must approve pushing the commit and tag.
