@@ -3,8 +3,9 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
-TYPES = {"n", "an", "ans", "z"}
-LENGTHS = {"fixed", "llvar", "lllvar"}
+TYPES = {"n", "an", "ans", "z", "b"}  # b: raw bytes, shown as hex; max counts bytes
+PREFIX_WIDTH = {"llvar": 2, "lllvar": 3, "llllvar": 4}
+LENGTHS = {"fixed", *PREFIX_WIDTH}
 ENCODINGS = {"ascii", "bcd"}
 SENSITIVE = {"pan", "track"}
 EDITIONS = {"1987": "0", "2003": "2"}  # edition -> MTI version digit

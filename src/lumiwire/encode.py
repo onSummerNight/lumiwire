@@ -1,5 +1,5 @@
 """Encode a message dict into a hex string; mirrors decode()."""
-from .spec import Spec
+from .spec import PREFIX_WIDTH, Spec
 
 
 class EncodeError(ValueError):
@@ -34,19 +34,26 @@ def encode(message: dict, spec: Spec) -> str:
         value = fields[num]
         if not isinstance(value, str):
             raise EncodeError(f"field {num}: value must be a string")
-        if len(value) > f.max:
-            raise EncodeError(f"field {num}: length {len(value)} exceeds max {f.max}")
-        if f.length == "fixed" and len(value) != f.max:
-            raise EncodeError(f"field {num}: fixed length {f.max}, got {len(value)}")
-        if (f.type == "n" or f.encoding == "bcd") and not value.isdigit() and value:
+        size = len(value)
+        if f.type == "b":
+            if size % 2 or any(c not in "0123456789abcdefABCDEF" for c in value):
+                raise EncodeError(f"field {num}: binary value must be even-length hex")
+            size //= 2
+        if size > f.max:
+            raise EncodeError(f"field {num}: length {size} exceeds max {f.max}")
+        if f.length == "fixed" and size != f.max:
+            raise EncodeError(f"field {num}: fixed length {f.max}, got {size}")
+        if f.type != "b" and (f.type == "n" or f.encoding == "bcd") and not value.isdigit() and value:
             raise EncodeError(f"field {num}: non-digit in numeric value")
         bitmap[(num - 1) // 8] |= 0x80 >> (num - 1) % 8
         if f.length != "fixed":
-            width = 2 if f.length == "llvar" else 3
-            prefix = str(len(value)).zfill(width)
+            prefix = str(size).zfill(PREFIX_WIDTH[f.length])
             body += _digits(prefix) if f.encoding == "bcd" else prefix.encode("ascii")
         try:
-            body += _digits(value) if f.encoding == "bcd" else value.encode("ascii")
+            if f.type == "b":
+                body += bytes.fromhex(value)
+            else:
+                body += _digits(value) if f.encoding == "bcd" else value.encode("ascii")
         except UnicodeEncodeError:
             raise EncodeError(f"field {num}: non-ASCII character") from None
     if spec.bitmap_encoding == "hex":

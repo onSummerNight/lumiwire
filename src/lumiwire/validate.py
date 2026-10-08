@@ -4,6 +4,7 @@ from .spec import EDITIONS, Spec
 
 _DIGITS = "0123456789"
 _Z_SEPARATORS = "=D"
+_HEX = "0123456789abcdefABCDEF"
 
 
 def _bad_char(kind: str, value: str) -> str | None:
@@ -15,6 +16,8 @@ def _bad_char(kind: str, value: str) -> str | None:
             return "non-alphanumeric"
         if kind == "ans" and not 0x20 <= ord(c) <= 0x7E:
             return "non-printable"
+        if kind == "b" and c not in _HEX:
+            return "non-hex"
         if kind == "z" and c not in _DIGITS + _Z_SEPARATORS:
             return "invalid"
     return None
@@ -34,8 +37,13 @@ def validate(hex_message: str, spec: Spec) -> list[str]:
     for num, value in message["fields"].items():
         f = spec.fields[num]
         label = f"field {num} ({f.name})"
-        if len(value) > f.max:
-            errors.append(f"{label}: length {len(value)} exceeds max {f.max}")
+        size = len(value)
+        if f.type == "b":
+            size //= 2
+            if len(value) % 2:
+                errors.append(f"{label}: binary value must be even-length hex")
+        if size > f.max:
+            errors.append(f"{label}: length {size} exceeds max {f.max}")
         problem = _bad_char(f.type, value)
         if problem:
             # never quote the value of a PAN or track field

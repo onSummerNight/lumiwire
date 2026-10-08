@@ -1,5 +1,5 @@
 """Decode a hex-encoded ISO 8583:1987 message using a field spec."""
-from .spec import Spec
+from .spec import PREFIX_WIDTH, Spec
 
 
 class DecodeError(ValueError):
@@ -75,10 +75,12 @@ def decode(hex_message: str, spec: Spec) -> dict:
         if f.length == "fixed":
             n = f.max
         else:
-            n = _read_len(r, 2 if f.length == "llvar" else 3, f.encoding, what)
+            n = _read_len(r, PREFIX_WIDTH[f.length], f.encoding, what)
             if n > f.max:
                 raise DecodeError(f"{what}: length {n} exceeds max {f.max} at offset {start}")
-        if f.encoding == "bcd":
+        if f.type == "b":
+            fields[num] = r.take(n, what).hex().upper()
+        elif f.encoding == "bcd":
             fields[num] = _read_digits(r, n, what)
         else:
             fields[num] = r.take(n, what).decode("ascii", errors="replace")

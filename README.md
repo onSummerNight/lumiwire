@@ -96,8 +96,8 @@ JSON, one file per dialect:
 | `bitmap_encoding` | `binary`, `hex` |
 | field number (key) | 2 to 128 |
 | `name` | any text |
-| `type` | `n`, `an`, `ans`, `z` |
-| `length` | `fixed`, `llvar`, `lllvar` |
+| `type` | `n`, `an`, `ans`, `z`, `b` (raw bytes, hex in JSON and output; `max` counts bytes; `encoding` then applies to the length prefix only) |
+| `length` | `fixed`, `llvar`, `lllvar`, `llllvar` (2, 3, 4-digit length prefix) |
 | `max` | positive integer (the length for `fixed`) |
 | `encoding` | `ascii`, `bcd` |
 | `sensitive` (optional) | `pan`, `track` |
