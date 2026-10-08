@@ -42,3 +42,5 @@ Append-only. `YYYY-MM-DD HH:MM | who | what | result` (local time).
 2026-10-08 08:06 | manager | /save-progress: v2 complete, nothing in Next; next session starts with /decide on a Later item | committed
 2026-10-08 08:08 | manager | Brief 9 written (MIT LICENSE, README LumiDev footer, commit brief.md change), user instruction | handed to worker
 2026-10-08 08:09 | worker | Brief 9: LICENSE, README footer, brief.md committed (2 commits) | done, 64 passed, not pushed
+2026-10-08 08:10 | manager | Review brief 9 (MIT LICENSE, README footer, brief.md commit) | done, 64 passed (re-run); origin/main already at 78ae013 (step 9 + user's CI commit 55c93d1) though Result says not pushed; d522151 local only; no new brief
+2026-10-08 08:11 | manager | /save-progress: PROGRESS corrected (step 9 + CI already on origin), docs pushed | next session: /decide a Later item
