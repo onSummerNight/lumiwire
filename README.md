@@ -75,6 +75,10 @@ field 3 (Processing code): non-digit character 'A' in n field
 
 All three commands take `--spec FILE` to use your own spec instead of the bundled one (`src/lumiwire/specs/iso8583_1987.json`). Validate quotes no value from PAN or track fields.
 
+## Editions
+
+`--spec src/lumiwire/specs/iso8583_2003.json` selects the bundled ISO 8583:2003 demo spec (MTI version digit 2). It is a demo, not normative: its field formats are unverified, and the spec is not chosen automatically from the MTI.
+
 ## Spec file
 
 JSON, one file per dialect:

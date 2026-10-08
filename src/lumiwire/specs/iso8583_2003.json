@@ -1,0 +1,18 @@
+{
+  "name": "iso8583-2003-demo",
+  "description": "Demo, not normative; field formats unverified. Synthetic dialect for testing only.",
+  "edition": "2003",
+  "mti_encoding": "ascii",
+  "bitmap_encoding": "binary",
+  "fields": {
+    "2":  {"name": "Primary account number", "type": "n",   "length": "llvar",   "max": 19,  "encoding": "ascii", "sensitive": "pan"},
+    "3":  {"name": "Processing code",        "type": "n",   "length": "fixed",   "max": 6,   "encoding": "ascii"},
+    "4":  {"name": "Amount, transaction",    "type": "n",   "length": "fixed",   "max": 12,  "encoding": "ascii"},
+    "11": {"name": "STAN",                   "type": "n",   "length": "fixed",   "max": 6,   "encoding": "bcd"},
+    "35": {"name": "Track 2 data",           "type": "z",   "length": "llvar",   "max": 37,  "encoding": "ascii", "sensitive": "track"},
+    "41": {"name": "Terminal ID",            "type": "ans", "length": "fixed",   "max": 8,   "encoding": "ascii"},
+    "52": {"name": "Binary block",           "type": "b",   "length": "fixed",   "max": 8,   "encoding": "ascii"},
+    "55": {"name": "Binary variable data",   "type": "b",   "length": "llllvar", "max": 999, "encoding": "ascii"},
+    "70": {"name": "Network management code","type": "n",   "length": "fixed",   "max": 3,   "encoding": "bcd"}
+  }
+}
