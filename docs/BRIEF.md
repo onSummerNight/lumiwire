@@ -1,28 +1,28 @@
-# Brief: Step 8 — v2.0 wrap-up
+# Brief: Step 9 — license, README footer, brief command
 
-**Goal:** README covers both editions and the new field features, verified in a fresh venv; version 2.0.0; tag `v2.0` locally.
+**Goal:** repo has an MIT `LICENSE`, the README ends with a "LumiDev project" footer linking to https://lumidev.online, and the pending `.claude/commands/brief.md` change is committed.
 
-**Why now:** v2 success check met (7c) and the wrong-edition error fixed (7d). Remaining gaps (tertiary bitmap, subfields, renumbering) need sources we don't have; they go to Later.
+**Why now:** User instruction. `pyproject.toml` already declares `license = { text = "MIT" }` but no LICENSE file exists.
 
 ## Steps
-1. README: "Editions" section (1987 default, 2003 via `--spec`, demo-not-normative warning), spec-format table includes `edition`, `b`, `llllvar`; one validate example of the wrong-edition error. Add `examples/2100.json` (synthetic, test PAN) and an encode/decode example with it.
-2. Fresh venv in the scratchpad: `pip install -e .`, run every README command verbatim; outputs must match. Fix the README, not the code, unless a command is broken (then smallest fix plus a test, and report it).
-3. `pyproject.toml` version `2.0.0`; `.venv/bin/pytest -q` green.
-4. Move tertiary bitmap, subfields and field renumbering from Next to Later in PROGRESS, pointing at `docs/ISO2003-GAPS.md`.
-5. Commit `docs: README and example for v2`, then `git tag v2.0` locally. Do NOT push; report so the user can approve.
+1. `LICENSE`: standard MIT text, `Copyright (c) 2026 LumiDev` (matches `authors` in pyproject). No other wording changes.
+2. README: append a footer after the last section, e.g. a `---` rule then `A [LumiDev project](https://lumidev.online) · MIT License`. Nothing else in the README changes.
+3. Commit 1: `chore: add MIT license and LumiDev footer` (LICENSE, README.md).
+4. Commit 2: `chore: update brief command to review-and-pick flow` (`.claude/commands/brief.md` only, as it is on disk; don't edit it).
+5. Check: `git status --short` clean apart from docs; `.venv/bin/pytest -q` still 64 passed.
 
 ## Acceptance check
-Every README command in a fresh venv gives the output shown; `.venv/bin/pytest -q` → 64 passed; `git tag` lists `v2.0`.
+`head -3 LICENSE` shows "MIT License" and the 2026 LumiDev copyright; `tail -3 README.md` shows the footer link; `git status --short` shows no `.claude/` change; pytest 64 passed.
 
 ## Constraints
-- Synthetic data only; no real card numbers or hostnames. Keep `.claude/commands/brief.md` out of commits.
-- Ask before pushing the commit or tag.
+- No code, version or tag changes. Two separate commits as above.
+- Do NOT push; report so the user can approve.
 
 ## Out of scope
-Tertiary bitmap, subfields, renumbering, auto spec selection from MTI, PyPI, CI, GitHub release.
+License headers in source files, badges, a new release/tag, any other README edits.
 
 ## Result
-Done. All 8 README commands run verbatim in a fresh venv match the shown output; `.venv/bin/pytest -q` → 64 passed.
-Added `examples/2100.json`, README Editions section and `edition` row in the spec table; version 2.0.0; tertiary bitmap/subfields/renumbering moved to Later.
-No code changes. Commit `docs: README and example for v2` and local tag `v2.0` made, not pushed.
-Decide: push `main` and tag `v2.0` to origin?
+Done. Two commits made, not pushed.
+- `head -3 LICENSE`: "MIT License" / "Copyright (c) 2026 LumiDev"; README ends with the footer link.
+- `git status --short`: no `.claude/` change; pytest: 64 passed.
+- Decide: untracked `.github/` appeared in the working tree (not from this task); commit, ignore or remove? Push needs your approval.

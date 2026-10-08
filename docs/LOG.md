@@ -40,3 +40,5 @@ Append-only. `YYYY-MM-DD HH:MM | who | what | result` (local time).
 2026-10-08 08:06 | claude | save-progress: pushed main and tag v2.0 to origin; PROGRESS updated | 64 passed
 2026-10-08 08:06 | manager | Review brief 8 (v2.0 wrap-up) | done, 64 passed (re-run), README verified, main + v2.0 on origin match local; v2 scope complete, no new brief
 2026-10-08 08:06 | manager | /save-progress: v2 complete, nothing in Next; next session starts with /decide on a Later item | committed
+2026-10-08 08:08 | manager | Brief 9 written (MIT LICENSE, README LumiDev footer, commit brief.md change), user instruction | handed to worker
+2026-10-08 08:09 | worker | Brief 9: LICENSE, README footer, brief.md committed (2 commits) | done, 64 passed, not pushed
