@@ -38,3 +38,5 @@ Append-only. `YYYY-MM-DD HH:MM | who | what | result` (local time).
 2026-10-08 08:05 | manager | Brief 8 written (v2.0 wrap-up: README, example, version, local tag) | handed to worker
 2026-10-08 08:06 | claude | Step 8: README Editions/spec table, examples/2100.json, version 2.0.0, PROGRESS | 8 README commands match in fresh venv; 64 passed
 2026-10-08 08:06 | claude | save-progress: pushed main and tag v2.0 to origin; PROGRESS updated | 64 passed
+2026-10-08 08:06 | manager | Review brief 8 (v2.0 wrap-up) | done, 64 passed (re-run), README verified, main + v2.0 on origin match local; v2 scope complete, no new brief
+2026-10-08 08:06 | manager | /save-progress: v2 complete, nothing in Next; next session starts with /decide on a Later item | committed
