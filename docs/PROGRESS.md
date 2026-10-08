@@ -32,4 +32,4 @@ Updated 2026-10-08
 - Tertiary bitmap, subfields, field renumbering for 2003 (need sources; see docs/ISO2003-GAPS.md)
 
 ## Blockers
-- Untracked `.github/` in the working tree (not ours; left untouched).
+- None. Note: `55c93d1` (CI workflow) was committed by another session during step 9; not reviewed here.

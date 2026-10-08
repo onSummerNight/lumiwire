@@ -25,4 +25,4 @@ License headers in source files, badges, a new release/tag, any other README edi
 Done. Two commits made, not pushed.
 - `head -3 LICENSE`: "MIT License" / "Copyright (c) 2026 LumiDev"; README ends with the footer link.
 - `git status --short`: no `.claude/` change; pytest: 64 passed.
-- Decide: untracked `.github/` appeared in the working tree (not from this task); commit, ignore or remove? Push needs your approval.
+- Note: commit `55c93d1 ci: run tests on push` (adds `.github/workflows`) landed between my commits; not from this task. Push needs your approval.
