@@ -15,10 +15,10 @@ Updated 2026-10-08
 - Step 7b: spec type `b` (raw bytes, hex in JSON) and length `llllvar` in decode/encode/validate; README spec table updated. 54 tests pass.
 - Step 7c: bundled `iso8583_2003.json` demo spec (not normative), two synthetic 2003 messages, tests/test_2003.py, README Editions section. 62 tests pass.
 - Step 7d: `validate()` checks the MTI edition before decoding; a wrong edition is the single error. 64 tests pass.
-- Step 8: README Editions + spec table, `examples/2100.json`, all 8 README commands verified in a fresh venv; version 2.0.0; local tag `v2.0` (not pushed). 64 tests pass.
+- Step 8: README Editions + spec table, `examples/2100.json`, all 8 README commands verified in a fresh venv; version 2.0.0; tag `v2.0`, both pushed to origin. 64 tests pass.
 
 ## Now
-- Nothing in progress. v2.0 complete locally; push of commit and tag awaits user approval.
+- Nothing in progress. v2.0 complete and pushed (main + tag v2.0).
 
 ## Next
 - Nothing planned; see Later
