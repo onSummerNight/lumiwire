@@ -36,7 +36,7 @@ def test_pan_error_does_not_quote_value():
 
 
 def test_collects_all_errors():
-    msg = BROKEN["bad_mti_version"][0].replace("31313131303030303030303030", "31313131303041303030303030", 1)
+    msg = BROKEN["bad_mti_nondigit"][0].replace("31313131303030303030303030", "31313131303041303030303030", 1)
     assert len(validate(msg, SPEC)) == 2
 
 

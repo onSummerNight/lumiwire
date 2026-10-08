@@ -10,7 +10,7 @@ from lumiwire.encode import encode
 from lumiwire.mask import mask
 from lumiwire.spec import load_spec
 from lumiwire.validate import validate
-from messages import DECODED_2100, DECODED_2800, MSG_2100, MSG_2800
+from messages import DECODED_2100, DECODED_2800, MSG_0200, MSG_2100, MSG_2800
 
 SPECS = resources.files("lumiwire") / "specs"
 SPEC = load_spec(SPECS / "iso8583_2003.json")
@@ -50,5 +50,19 @@ def test_1987_spec_flags_version_digit():
 
 
 def test_1987_spec_rejects_2100():
-    # decode fails first: fields 52 and 55 are not in the 1987 demo spec
-    assert any("field 52: no entry in spec" in e for e in validate(MSG_2100, SPEC_1987))
+    # edition is checked before decoding, so the real cause is the only error
+    errors = validate(MSG_2100, SPEC_1987)
+    assert len(errors) == 1
+    assert "version digit must be 0 for ISO 8583:1987" in errors[0]
+
+
+def test_1987_spec_rejects_2800_with_one_error():
+    errors = validate(MSG_2800, SPEC_1987)
+    assert len(errors) == 1
+    assert "version digit must be 0 for ISO 8583:1987" in errors[0]
+
+
+def test_2003_spec_rejects_1987_message():
+    errors = validate(MSG_0200, SPEC)
+    assert len(errors) == 1
+    assert "version digit must be 2 for ISO 8583:2003" in errors[0]

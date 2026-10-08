@@ -31,3 +31,6 @@ Append-only. `YYYY-MM-DD HH:MM | who | what | result` (local time).
 2026-10-08 08:00 | manager | Brief 7c written (2003 demo spec, user choice) | handed to worker
 2026-10-08 | claude | Step 7c: iso8583_2003.json demo spec, 2003 messages and tests, README Editions | 62 passed
 2026-10-08 | claude | save-progress: 62 passed; commit v2 scope docs; push main | see git log
+2026-10-08 08:01 | manager | Review brief 7c (2003 demo spec) | done, 62 passed (re-run), no code changes; wrong-edition message can fail on a field error before the version check; v2 success check met
+2026-10-08 08:02 | manager | Brief 7d written (validate: edition check before field decode), user choice | handed to worker
+2026-10-08 08:03 | claude | Step 7d: validate checks edition before decode; 3 new tests, 1 existing test re-based | 64 passed

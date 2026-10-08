@@ -1,5 +1,5 @@
 """Validate a hex-encoded ISO 8583:1987 message against a spec."""
-from .decode import DecodeError, decode
+from .decode import DecodeError, _Reader, _read_digits, decode
 from .spec import EDITIONS, Spec
 
 _DIGITS = "0123456789"
@@ -23,7 +23,27 @@ def _bad_char(kind: str, value: str) -> str | None:
     return None
 
 
+def _edition_error(mti: str, spec: Spec) -> str | None:
+    if len(mti) == 4 and mti.isascii() and mti.isdigit() and mti[0] != EDITIONS[spec.edition]:
+        return f"MTI {mti!r}: version digit must be {EDITIONS[spec.edition]} for ISO 8583:{spec.edition}"
+    return None
+
+
+def _peek_mti(hex_message: str, spec: Spec) -> str | None:
+    try:
+        r = _Reader(bytes.fromhex("".join(hex_message.split())))
+        if spec.mti_encoding == "bcd":
+            return _read_digits(r, 4, "MTI")
+        return r.take(4, "MTI").decode("ascii", errors="replace")
+    except (ValueError, DecodeError):
+        return None
+
+
 def validate(hex_message: str, spec: Spec) -> list[str]:
+    mti = _peek_mti(hex_message, spec)
+    wrong_edition = _edition_error(mti, spec) if mti else None
+    if wrong_edition:
+        return [wrong_edition]
     try:
         message = decode(hex_message, spec)
     except DecodeError as e:
@@ -32,8 +52,6 @@ def validate(hex_message: str, spec: Spec) -> list[str]:
     mti = message["mti"]
     if len(mti) != 4 or not all(c in _DIGITS for c in mti):
         errors.append(f"MTI {mti!r}: must be 4 digits")
-    elif mti[0] != EDITIONS[spec.edition]:
-        errors.append(f"MTI {mti!r}: version digit must be {EDITIONS[spec.edition]} for ISO 8583:{spec.edition}")
     for num, value in message["fields"].items():
         f = spec.fields[num]
         label = f"field {num} ({f.name})"

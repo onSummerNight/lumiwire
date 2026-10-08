@@ -1,6 +1,6 @@
 # Progress
 
-Updated 2026-10-07 21:38
+Updated 2026-10-08
 
 ## Done
 - Context LOCKED 2026-10-07; JSON spec format
@@ -14,6 +14,7 @@ Updated 2026-10-07 21:38
 - Step 7a: spec `edition` key (1987/2003), validate checks MTI version digit per edition, `docs/ISO2003-GAPS.md` written (field-level rows unverified). 46 tests pass.
 - Step 7b: spec type `b` (raw bytes, hex in JSON) and length `llllvar` in decode/encode/validate; README spec table updated. 54 tests pass.
 - Step 7c: bundled `iso8583_2003.json` demo spec (not normative), two synthetic 2003 messages, tests/test_2003.py, README Editions section. 62 tests pass.
+- Step 7d: `validate()` checks the MTI edition before decoding; a wrong edition is the single error. 64 tests pass.
 
 ## Now
 - Nothing in progress. v1 complete.
