@@ -150,3 +150,7 @@ ISO 8583:1987 and the :2003 demo spec, with primary and secondary bitmap. No cry
 pip install -e ".[dev]"
 pytest -q
 ```
+
+---
+
+A [LumiDev project](https://lumidev.online) · MIT License
