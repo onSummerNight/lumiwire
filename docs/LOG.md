@@ -34,3 +34,6 @@ Append-only. `YYYY-MM-DD HH:MM | who | what | result` (local time).
 2026-10-08 08:01 | manager | Review brief 7c (2003 demo spec) | done, 62 passed (re-run), no code changes; wrong-edition message can fail on a field error before the version check; v2 success check met
 2026-10-08 08:02 | manager | Brief 7d written (validate: edition check before field decode), user choice | handed to worker
 2026-10-08 08:03 | claude | Step 7d: validate checks edition before decode; 3 new tests, 1 existing test re-based | 64 passed
+2026-10-08 08:04 | manager | Review brief 7d (validate: edition check before fields) | done, 64 passed (re-run); test_collects_all_errors rebased on bad_mti_nondigit (accepted, still covers collect-all)
+2026-10-08 08:05 | manager | Brief 8 written (v2.0 wrap-up: README, example, version, local tag) | handed to worker
+2026-10-08 08:06 | claude | Step 8: README Editions/spec table, examples/2100.json, version 2.0.0, PROGRESS | 8 README commands match in fresh venv; 64 passed

@@ -1,6 +1,6 @@
 # LumiWire
 
-ISO 8583 messages are dense binary or hex. Reading one, or building a valid one, usually takes a custom script. LumiWire decodes, encodes and validates ISO 8583:1987 messages from the command line, with field definitions in a JSON spec so dialects are configuration, not code.
+ISO 8583 messages are dense binary or hex. Reading one, or building a valid one, usually takes a custom script. LumiWire decodes, encodes and validates ISO 8583:1987 and :2003 messages from the command line, with field definitions in a JSON spec so dialects are configuration, not code.
 
 Card numbers and track data are masked in all output by default.
 
@@ -77,7 +77,40 @@ All three commands take `--spec FILE` to use your own spec instead of the bundle
 
 ## Editions
 
-`--spec src/lumiwire/specs/iso8583_2003.json` selects the bundled ISO 8583:2003 demo spec (MTI version digit 2). It is a demo, not normative: its field formats are unverified, and the spec is not chosen automatically from the MTI.
+Two editions are bundled. ISO 8583:1987 is the default. ISO 8583:2003 (MTI version digit 2) is selected with `--spec`:
+
+```
+lumiwire encode examples/2100.json --spec src/lumiwire/specs/iso8583_2003.json
+```
+```
+3231303070200000208012003136343131313131313131313131313131313030303030303030303030303030313030300001233238343131313131313131313131313131313D32353132313031303030305445524D303030310123456789ABCDEF30303034DEADBEEF
+```
+
+```
+lumiwire decode 3231303070200000208012003136343131313131313131313131313131313030303030303030303030303030313030300001233238343131313131313131313131313131313D32353132313031303030305445524D303030310123456789ABCDEF30303034DEADBEEF --spec src/lumiwire/specs/iso8583_2003.json
+```
+```
+MTI 2100
+002 Primary account number: 411111******1111
+003 Processing code: 000000
+004 Amount, transaction: 000000001000
+011 STAN: 000123
+035 Track 2 data: 411111******1111************
+041 Terminal ID: TERM0001
+052 Binary block: 0123456789ABCDEF
+055 Binary variable data: DEADBEEF
+```
+
+The edition is not chosen from the MTI. Validating a 2003 message with the default 1987 spec reports the edition mismatch as the only error (exit 1):
+
+```
+lumiwire validate 3231303070200000208012003136343131313131313131313131313131313030303030303030303030303030313030300001233238343131313131313131313131313131313D32353132313031303030305445524D303030310123456789ABCDEF30303034DEADBEEF
+```
+```
+MTI '2100': version digit must be 0 for ISO 8583:1987
+```
+
+**Warning:** the 2003 spec is a demo, not normative. Its field formats are unverified; known gaps are in `docs/ISO2003-GAPS.md`.
 
 ## Spec file
 
@@ -96,6 +129,7 @@ JSON, one file per dialect:
 
 | Key | Allowed values |
 |---|---|
+| `edition` | `1987`, `2003` (validate checks the MTI version digit against it) |
 | `mti_encoding` | `ascii`, `bcd` |
 | `bitmap_encoding` | `binary`, `hex` |
 | field number (key) | 2 to 128 |
@@ -108,7 +142,7 @@ JSON, one file per dialect:
 
 ## Scope
 
-ISO 8583:1987 only, with primary and secondary bitmap. No cryptography (PIN blocks, MAC), no network simulation.
+ISO 8583:1987 and the :2003 demo spec, with primary and secondary bitmap. No cryptography (PIN blocks, MAC), no network simulation.
 
 ## Tests
 

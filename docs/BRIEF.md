@@ -1,26 +1,28 @@
-# Brief: Step 7d — validate checks edition before fields
+# Brief: Step 8 — v2.0 wrap-up
 
-**Goal:** `validate()` reads the MTI version digit before decoding any field; if it doesn't match the spec's edition, that is the single error returned.
+**Goal:** README covers both editions and the new field features, verified in a fresh venv; version 2.0.0; tag `v2.0` locally.
 
-**Why now:** 7c review: a 2003 message (2100) validated against the 1987 spec reports "field 52: no entry in spec", which hides the real cause (wrong edition). User chose this before the v2 wrap-up.
+**Why now:** v2 success check met (7c) and the wrong-edition error fixed (7d). Remaining gaps (tertiary bitmap, subfields, renumbering) need sources we don't have; they go to Later.
 
 ## Steps
-1. `validate.py`: before calling `decode()`, read the MTI from the start of the hex per the spec's `mti_encoding` (ascii: 8 hex chars; bcd: 4). If it can't be read or isn't 4 digits, keep the existing MTI error. If the version digit doesn't match the edition, return only that error (it already names the edition); don't decode further.
-2. Otherwise continue exactly as now (decode, then content checks).
-3. Tests in `tests/test_2003.py`: MSG_2100 against the 1987 spec → exactly one error, the version-digit one; MSG_2800 likewise; a 1987 message against the 2003 spec → the version-digit error. Existing validate tests unchanged.
-4. Small commit: `fix: validate reports wrong edition before field errors`.
+1. README: "Editions" section (1987 default, 2003 via `--spec`, demo-not-normative warning), spec-format table includes `edition`, `b`, `llllvar`; one validate example of the wrong-edition error. Add `examples/2100.json` (synthetic, test PAN) and an encode/decode example with it.
+2. Fresh venv in the scratchpad: `pip install -e .`, run every README command verbatim; outputs must match. Fix the README, not the code, unless a command is broken (then smallest fix plus a test, and report it).
+3. `pyproject.toml` version `2.0.0`; `.venv/bin/pytest -q` green.
+4. Move tertiary bitmap, subfields and field renumbering from Next to Later in PROGRESS, pointing at `docs/ISO2003-GAPS.md`.
+5. Commit `docs: README and example for v2`, then `git tag v2.0` locally. Do NOT push; report so the user can approve.
 
 ## Acceptance check
-`.venv/bin/pytest -q`: all pass (62 existing + new edition-mismatch tests).
+Every README command in a fresh venv gives the output shown; `.venv/bin/pytest -q` → 64 passed; `git tag` lists `v2.0`.
 
 ## Constraints
-- Don't change `decode()`, `encode()`, `mask()` or the CLI. Reuse existing MTI-reading code if `decode.py` has a helper; don't duplicate parsing logic beyond the MTI.
-- Synthetic data only.
+- Synthetic data only; no real card numbers or hostnames. Keep `.claude/commands/brief.md` out of commits.
+- Ask before pushing the commit or tag.
 
 ## Out of scope
-Same check inside `decode` / CLI `decode`, choosing the spec automatically from the MTI, v2.0 wrap-up (next brief).
+Tertiary bitmap, subfields, renumbering, auto spec selection from MTI, PyPI, CI, GitHub release.
 
 ## Result
-Done. `validate()` peeks the MTI (reusing `_Reader`/`_read_digits` from decode) and returns only the version-digit error on mismatch.
-`.venv/bin/pytest -q` → `64 passed in 0.03s` (62 + 2 net new: 2100 and 2800 vs 1987 spec, 1987 msg vs 2003 spec; the old 2100 test was tightened to exactly one error).
-Decision for manager: `test_collects_all_errors` relied on version-digit + content error together, which the brief's rule makes impossible. I changed its base to `bad_mti_nondigit` (still 2 errors). Brief said existing validate tests unchanged.
+Done. All 8 README commands run verbatim in a fresh venv match the shown output; `.venv/bin/pytest -q` → 64 passed.
+Added `examples/2100.json`, README Editions section and `edition` row in the spec table; version 2.0.0; tertiary bitmap/subfields/renumbering moved to Later.
+No code changes. Commit `docs: README and example for v2` and local tag `v2.0` made, not pushed.
+Decide: push `main` and tag `v2.0` to origin?
