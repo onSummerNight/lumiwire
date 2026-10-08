@@ -30,3 +30,4 @@ Append-only. `YYYY-MM-DD HH:MM | who | what | result` (local time).
 2026-10-08 07:59 | manager | Review brief 7b (binary type b + llllvar) | done, 54 passed (re-run); b encoding applies to length prefix only
 2026-10-08 08:00 | manager | Brief 7c written (2003 demo spec, user choice) | handed to worker
 2026-10-08 | claude | Step 7c: iso8583_2003.json demo spec, 2003 messages and tests, README Editions | 62 passed
+2026-10-08 | claude | save-progress: 62 passed; commit v2 scope docs; push main | see git log

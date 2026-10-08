@@ -1,6 +1,7 @@
 # Context: LumiWire
 
 Status: LOCKED 2026-10-07
+Changed: 2026-10-07 v2 scope adds ISO 8583:2003
 
 ## Problem
 
@@ -17,6 +18,7 @@ Developers and testers who work on card payment systems: switches, acquirers, is
 - Validate a message against the spec
 - Mask card numbers and track data in all output by default
 - CLI with `decode`, `encode`, `validate` commands
+- v2: ISO 8583:2003 alongside 1987, as its own spec file (MTI version digit 2)
 
 ## Non-goals
 
@@ -24,13 +26,14 @@ Developers and testers who work on card payment systems: switches, acquirers, is
 - Network switch or host simulation
 - Cryptography: PIN blocks, MAC, key management
 - Any real card data or real network specifications
-- ISO 8583:1993 and :2003, NDC and other ATM protocols
+- ISO 8583:1993, NDC and other ATM protocols
 
 ## Success check
 
 - Round-trip tests: decode then encode gives the same bytes, on a set of synthetic messages
 - Validate rejects a set of deliberately broken synthetic messages with a clear error
 - Masked output never contains a full synthetic PAN (tested)
+- 2003 synthetic messages pass round-trip, validate and masking tests
 
 ## Stack
 
@@ -39,7 +42,7 @@ Python 3.10+, standard library plus Typer, pytest. Same layout as LumiLog.
 ## Constraints
 
 - Clean room: only the public ISO 8583 structure and synthetic data. No scheme or bank message specifications.
-- ISO 8583:1987 only. Primary and secondary bitmap. Fields in ASCII-hex or BCD.
+- ISO 8583:1987 and :2003 only. Primary and secondary bitmap. Fields in ASCII-hex or BCD.
 - Masking on by default; unmasking needs an explicit flag.
 
 ## Open questions
