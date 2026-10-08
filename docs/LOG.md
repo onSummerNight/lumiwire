@@ -27,3 +27,6 @@ Append-only. `YYYY-MM-DD HH:MM | who | what | result` (local time).
 2026-10-07 21:53 | manager | Review brief 7a (spec edition + MTI version check + 2003 gap list) | done, 46 passed (re-run); gap list field rows unverified: no public 2003 field tables found
 2026-10-07 21:55 | manager | Brief 7b written (binary type b + llllvar), user chose format features first | handed to worker
 2026-10-08 | claude | Step 7b: type b + llllvar in spec/decode/encode/validate, tests, README | 54 passed
+2026-10-08 07:59 | manager | Review brief 7b (binary type b + llllvar) | done, 54 passed (re-run); b encoding applies to length prefix only
+2026-10-08 08:00 | manager | Brief 7c written (2003 demo spec, user choice) | handed to worker
+2026-10-08 | claude | Step 7c: iso8583_2003.json demo spec, 2003 messages and tests, README Editions | 62 passed
