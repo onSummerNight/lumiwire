@@ -12,12 +12,13 @@ Updated 2026-10-07 21:38
 - Step 6: `main` and tag `v1.0` pushed to origin. 43 tests pass.
 - All v1 success checks met.
 - Step 7a: spec `edition` key (1987/2003), validate checks MTI version digit per edition, `docs/ISO2003-GAPS.md` written (field-level rows unverified). 46 tests pass.
+- Step 7b: spec type `b` (raw bytes, hex in JSON) and length `llllvar` in decode/encode/validate; README spec table updated. 54 tests pass.
 
 ## Now
 - Nothing in progress. v1 complete.
 
 ## Next
-- v2 (ISO 8583:2003 alongside 1987, decided 2026-10-07): next step sized from docs/ISO2003-GAPS.md (7a done)
+- v2 (ISO 8583:2003 alongside 1987, decided 2026-10-07): remaining gaps in docs/ISO2003-GAPS.md (tertiary bitmap, subfields, renumbering); 7a, 7b done
 
 ## Later
 - Diff two messages field by field

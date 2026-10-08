@@ -24,3 +24,6 @@ Append-only. `YYYY-MM-DD HH:MM | who | what | result` (local time).
 2026-10-07 21:45 | user+manager | /decide: v2 adds ISO 8583:2003 alongside 1987; CONTEXT.md updated (scope, non-goals, constraints, success check) | approved
 2026-10-07 21:46 | manager | Brief 7a written (spec edition + MTI version check + 2003 gap list) | handed to worker
 2026-10-07 | claude | Step 7a: spec edition key, edition-aware MTI check, ISO2003-GAPS.md | 46 passed; gap list field details unverified
+2026-10-07 21:53 | manager | Review brief 7a (spec edition + MTI version check + 2003 gap list) | done, 46 passed (re-run); gap list field rows unverified: no public 2003 field tables found
+2026-10-07 21:55 | manager | Brief 7b written (binary type b + llllvar), user chose format features first | handed to worker
+2026-10-08 | claude | Step 7b: type b + llllvar in spec/decode/encode/validate, tests, README | 54 passed

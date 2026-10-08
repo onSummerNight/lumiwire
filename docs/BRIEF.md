@@ -1,26 +1,26 @@
-# Brief: Step 7a — 2003 gap list + edition-aware spec
+# Brief: Step 7b — binary type `b` and `llllvar`
 
-**Goal:** the spec declares its edition, validate checks the MTI version digit against it, and `docs/ISO2003-GAPS.md` lists what 2003 needs beyond what the current spec format supports.
+**Goal:** the spec format supports type `"b"` (raw bytes) and length `"llllvar"` (4-digit prefix), end to end in decode, encode and validate.
 
-**Why now:** First v2 step (DECISIONS 2026-10-07). Find the real gaps before building a 2003 spec, so later briefs are sized on facts, not guesses.
+**Why now:** User chose "format features first" (no public 2003 field tables). Both are edition-independent and publicly documented; see `docs/ISO2003-GAPS.md`.
 
 ## Steps
-1. Spec loader: new required key `"edition"` in `{"1987", "2003"}`; MTI version digit is `"0"` for 1987, `"2"` for 2003. Add `"edition": "1987"` to the demo spec and both test spec files.
-2. `validate.py`: replace the hard-coded `"0"` check with the spec's edition digit; error text names the edition.
-3. Tests: spec without `edition` or with an unknown one → `SpecError`; a 1987-spec message with MTI `2100` → version-digit error; existing tests unchanged otherwise.
-4. Write `docs/ISO2003-GAPS.md` (max 30 lines) from public sources only (cite URLs): for each 2003 feature the current spec can't express (e.g. other length-prefix sizes, binary fields, subfields/composite fields, field-number changes from 1987), one line with what it is, which fields use it, and a rough size (S/M/L). Mark anything uncertain as "unverified".
-5. Small commit: `feat: spec edition and MTI version check`.
+1. `spec.py`: add `"b"` to TYPES and `"llllvar"` to LENGTHS. For `b`, `max` counts bytes.
+2. `decode.py`/`encode.py`: `b` values are raw bytes in the message and an uppercase hex string in the result/JSON (2 hex chars per byte); the length prefix counts bytes and uses the field's `encoding` like other prefixes. `llllvar` = 4-digit prefix, same rules as ll/lllvar.
+3. `validate.py`: `b` value must be even-length hex within `max` bytes.
+4. Tests: a test spec `tests/spec_binary.json` (edition 1987) with field 52 `b` fixed 8 and field 55 `b` llllvar max 999; one synthetic message using both; round-trip both ways; odd-length hex → `EncodeError`; existing tests unchanged.
+5. Small commit: `feat: binary field type and llllvar length`.
 
 ## Acceptance check
-`.venv/bin/pytest -q`: all pass (43 existing + new edition tests), and `docs/ISO2003-GAPS.md` exists with sources.
+`.venv/bin/pytest -q`: all pass (46 existing + new binary/llllvar tests).
 
 ## Constraints
-- Clean room: public descriptions only. No copied text or tables from the ISO standard, no scheme specs. Synthetic data only.
-- Don't change decode/encode/mask behaviour.
+- Don't change behaviour for existing types/lengths or masking. Standard library only, synthetic data only.
+- Update the spec-format section of README for the new values (docs only, no new examples).
 
 ## Out of scope
-The 2003 spec file itself and any gap implementation (later briefs, sized from the gap list).
+Tertiary bitmap, subfields, field renumbering, other type letters, the 2003 spec file.
 
 ## Result
-Done. `.venv/bin/pytest -q` → 46 passed (43 + 3 new edition tests). Commit f28b41c; `docs/ISO2003-GAPS.md` written (23 lines, sources cited).
-Manager: web sources gave no field-level 2003 detail, so field columns are marked unverified. Decide whether to find a public field list before the 2003 spec brief. Docs commit is local, not pushed.
+Done. `.venv/bin/pytest -q` → 54 passed (46 existing + 8 new in tests/test_binary.py). Code commit: feat: binary field type and llllvar length.
+Manager: for type `b` the spec `encoding` applies to the length prefix only (noted in README). Validate's odd-length check can't trigger on decoded messages (decode always yields even hex); it is there per the brief. Docs commit is local, not pushed.
